@@ -51,16 +51,23 @@ form {
     margin: 0;
     flex: 1;
     position: relative;
-    padding-bottom: $spacing-lg;
-
-    button {
-      position: absolute;
-      bottom: 0;
-      right: 0;
-    }
+    /*padding-bottom: $spacing-lg; */
   }
+ 
+  
 }
-
+button {
+  /*position: absolute; */
+  bottom: 0;
+  right: 0;
+  margin: 0px 3px;
+}
+.btn-container{
+  display: flex;
+  flex-flow: row;
+  /* float: right; */
+  place-self: flex-end;
+}
 .empty {
   display: flex;
   text-align: center;

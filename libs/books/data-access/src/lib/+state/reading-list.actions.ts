@@ -27,6 +27,11 @@ export const confirmedAddToReadingList = createAction(
   props<{ book: Book }>()
 );
 
+export const confirmedFinishToRead = createAction(
+  '[Reading List] Confirmed  finished to read',
+  props<{ item: ReadingListItem }>()
+);
+
 export const removeFromReadingList = createAction(
   '[Reading List] Remove from list',
   props<{ item: ReadingListItem }>()

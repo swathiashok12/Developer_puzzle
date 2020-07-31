@@ -9,7 +9,8 @@ import { Book } from '@tmo/shared/models';
 @Injectable()
 export class BooksEffects {
   searchBooks$ = createEffect(() =>
-    this.actions$.pipe(
+    this.actions$
+    .pipe(
       ofType(BooksActions.searchBooks),
       fetch({
         run: action => {
