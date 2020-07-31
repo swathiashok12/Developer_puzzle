@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { Store } from '@ngrx/store';
 import {
   addToReadingList,
@@ -9,6 +9,8 @@ import {
 } from '@tmo/books/data-access';
 import { FormBuilder } from '@angular/forms';
 import { Book } from '@tmo/shared/models';
+import { Observable, interval } from 'rxjs';
+import { debounce } from 'rxjs/operators';
 
 @Component({
   selector: 'tmo-book-search',
@@ -16,9 +18,8 @@ import { Book } from '@tmo/shared/models';
   styleUrls: ['./book-search.component.scss']
 })
 export class BookSearchComponent implements OnInit {
-  //books: ReadingListBook[];
-  books$ = this.store.select(getAllBooks)
 
+  books$ = this.store.select(getAllBooks);  
   searchForm = this.fb.group({
     term: ''
   });
@@ -28,12 +29,17 @@ export class BookSearchComponent implements OnInit {
     private readonly fb: FormBuilder
   ) {}
 
-  get searchTerm(): string {
-    return this.searchForm.value.term;
-  }
-
   ngOnInit(): void {
     this.books$ = this.store.select(getAllBooks);
+    this.onChanges();
+  }
+  onChanges(): void {
+    this.searchForm.valueChanges
+    .pipe(debounce(() => interval(500)))
+    .subscribe(val => {
+      console.log(val);
+      this.store.dispatch(searchBooks({ term: val.term }));
+    });
   }
 
   formatDate(date: void | string) {
@@ -48,14 +54,7 @@ export class BookSearchComponent implements OnInit {
 
   searchExample() {
     this.searchForm.controls.term.setValue('javascript');
-    this.searchBooks();
-  }
-  searchBooks() {
-    if (this.searchForm.value.term) {
-      this.store.dispatch(searchBooks({ term: this.searchTerm }));
-    } else {
-      this.store.dispatch(clearSearch());
-    }
+    this.store.dispatch(searchBooks({ term: 'javascript' }));
   }
 
 }
