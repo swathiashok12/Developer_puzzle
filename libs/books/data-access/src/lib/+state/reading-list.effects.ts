@@ -33,7 +33,7 @@ export class ReadingListEffects implements OnInitEffects {
     this.actions$.pipe(
       ofType(ReadingListActions.addToReadingList),
       optimisticUpdate({
-        run: ({ book }) => {
+        run: ({ book  }) => {
           return this.http.post('/api/reading-list', book).pipe(
             map(() =>
               ReadingListActions.confirmedAddToReadingList({

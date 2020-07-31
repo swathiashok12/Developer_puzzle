@@ -34,6 +34,7 @@ describe('Books Reducer', () => {
     });
 
     it('failedAddToReadingList should undo book addition to the state', () => {
+      
       const action = ReadingListActions.failedAddToReadingList({
         book: createBook('B')
       });
@@ -46,11 +47,12 @@ describe('Books Reducer', () => {
     it('failedRemoveFromReadingList should undo book removal from the state', () => {
       const action = ReadingListActions.failedRemoveFromReadingList({
         item: createReadingListItem('C')
-      });
+      });  // This CreateReadingListItem C is not available in the list, so, failed to remove will not add/remove 
+           //the C returns the available A, B
 
       const result: State = reducer(state, action);
 
-      expect(result.ids).to.eql(['A', 'B', 'C']);
+      expect(result.ids).to.eql(['A', 'B']);
     });
   });
 

@@ -4,7 +4,7 @@ import {
   addToReadingList,
   clearSearch,
   getAllBooks,
-  ReadingListBook,
+  // ReadingListBook,
   searchBooks
 } from '@tmo/books/data-access';
 import { FormBuilder } from '@angular/forms';
@@ -16,7 +16,8 @@ import { Book } from '@tmo/shared/models';
   styleUrls: ['./book-search.component.scss']
 })
 export class BookSearchComponent implements OnInit {
-  books: ReadingListBook[];
+  //books: ReadingListBook[];
+  books$ = this.store.select(getAllBooks)
 
   searchForm = this.fb.group({
     term: ''
@@ -32,9 +33,7 @@ export class BookSearchComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.store.select(getAllBooks).subscribe(books => {
-      this.books = books;
-    });
+    this.books$ = this.store.select(getAllBooks);
   }
 
   formatDate(date: void | string) {
@@ -51,7 +50,6 @@ export class BookSearchComponent implements OnInit {
     this.searchForm.controls.term.setValue('javascript');
     this.searchBooks();
   }
-
   searchBooks() {
     if (this.searchForm.value.term) {
       this.store.dispatch(searchBooks({ term: this.searchTerm }));
@@ -59,4 +57,5 @@ export class BookSearchComponent implements OnInit {
       this.store.dispatch(clearSearch());
     }
   }
+
 }
