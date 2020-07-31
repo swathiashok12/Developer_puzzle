@@ -8,6 +8,14 @@ import { map } from 'rxjs/operators';
 
 @Injectable()
 export class ReadingListEffects implements OnInitEffects {
+  apiRoot = "http://localhost:3333";
+  options = {
+    headers: { 
+      'Access-Control-Allow-Credentials': 'http://localhost:4200',
+      'access-control-allow-methods': 'OPTIONS, GET, PUT',
+      'access-control-allow-headers': 'content-type',
+      'Access-Control-Allow-Origin': "*" },
+  };
   loadReadingList$ = createEffect(() =>
     this.actions$.pipe(
       ofType(ReadingListActions.loadReadingList),
@@ -57,6 +65,27 @@ export class ReadingListEffects implements OnInitEffects {
       optimisticUpdate({
         run: ({ item }) => {
           return this.http.delete(`/api/reading-list/${item.bookId}`).pipe(
+            map(() =>
+              ReadingListActions.confirmedRemoveFromReadingList({
+                item
+              })
+            )
+          );
+        },
+        undoAction: ({ item }) => {
+          return ReadingListActions.failedRemoveFromReadingList({
+            item
+          });
+        }
+      })
+    )
+  );
+  updateReading$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(ReadingListActions.confirmedFinishToRead),
+      optimisticUpdate({
+        run: ({ item }) => {
+          return this.http.put(`${this.apiRoot}/api/reading-list/${item.bookId}/finished`, { item }, this.options ).pipe(
             map(() =>
               ReadingListActions.confirmedRemoveFromReadingList({
                 item

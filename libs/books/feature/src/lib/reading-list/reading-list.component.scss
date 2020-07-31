@@ -20,7 +20,10 @@
     justify-content: center;
   }
 }
-
+.reading-buttons-container .btn-list{
+  display: flex;
+  flex-direction: row;
+}
 .reading-list-item--cover {
   max-width: 36px;
   max-height: 36px;
